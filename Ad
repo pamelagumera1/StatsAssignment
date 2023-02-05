@@ -1,0 +1,99 @@
+import pandas as pd 
+import statistics 
+
+#Ho = TV Adversiting has a significant relationship with Sales
+#Ha =  There is no significant relationship between TV ads & Sales 
+
+# I wanted to see how the dataframe looks 
+# I did not necessary need to clean the data as it looks correct and cohesive to me.
+#  Although,  in hindsight I wanted to do aggregate every expenses which I thought would make more sense
+
+pd.options.display.max_rows = 9999
+
+df = pd.read_csv('advertising.csv', header=1, index_col=None, names = ['TV', 'Radio', 'Newspaper', 'Sales'] )
+
+# getting the total of TV expenses 
+
+tv_sum=df['TV'].sum()
+
+print('The total expenses:', tv_sum)
+
+#Shows the count, mean, std, etc.
+print(df.head())
+print(df.describe())
+
+from scipy.stats import pearsonr
+
+column1 = df['TV']
+column2 = df['Sales']
+
+corr, _ = pearsonr(column1, column2)
+print('Pearsons correlation: %.3f' % corr)
+
+#As we've seen in the graph between TV & Sales, that there is a positive correlation between these two variables
+# This is also proven through Pearson correlation of 0.901 which indicates that if the value is close to 1 or 1, there is
+#a positive correlation between these two.  
+#p-value > alpha 0.05 thefore we accept the null hypothesis. 
+
+# now I am the part where I wanted to graph and make visualisation of the data 
+
+import numpy as np
+import plotly.express as px
+import plotly.graph_objects as go
+
+#scatter plot would be a more applicable visualisation for TV & Sales figure since we are trying to check on 
+#linear regression 
+#What I found out is that the relationship between these two variables is linear.
+
+figure = px.scatter(data_frame=df, 
+                x = "TV", 
+                y = "Sales", 
+                color="TV", 
+                title="Results on TV Ads")
+
+figure.show()
+
+### Results shows that it shows a positive line which shows that as the TV expense increases, sales has also increases but it does not necessarily 
+## mean that an increase in TV expense also increase sales. Take for example: TV expense of 85.7 only drove 13.3 in sales and 96.2 only drove 12.1 increase. 
+# 
+# alpha = 0.05 
+
+## z = x - uo / std / sqt of p
+
+import statsmodels.formula.api as smf
+import seaborn as sns
+import statsmodels.api as sm
+from statsmodels.formula.api import ols
+
+
+#Created two different visualisation as I was unsure whether to use histogram or scatter plot. Here I wanted to see the difference between them. 
+# By looking at the graph, newspaper expenses and sales is skewed negatively; therefore giving us an intuitive 
+#idea that it does not have a significant relationship between these variables.  
+
+figure = px.histogram(data_frame=df, 
+                x = "Newspaper", 
+                y = "Sales", 
+                color="Newspaper", 
+                title="Ad Results on Newspaper")
+figure.show()
+
+figure = px.scatter(data_frame=df, 
+                x = "Newspaper", 
+                y = "Sales", 
+                color="Newspaper", 
+                title="Ad Results on Newspaper")
+figure.show()
+
+
+
+figure = px.histogram(data_frame=df, 
+                x = "Radio", 
+                y = "Sales", 
+                color="Radio", 
+                title="Ad Results on Radio")
+figure.show()
+
+
+ 
+
+
